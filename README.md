@@ -16,6 +16,7 @@ Projet de voiture télécommandée en utilisant des microbits
 -	Programme de la voiture
     -	communication entre la micro-bit et l’électronique
 -	Model 3D de la voiture
+-	Soudure: `grove connector`
 ### Travail de Mathieu :
 -	Télécommande
     -	Gestion radio
