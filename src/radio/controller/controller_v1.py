@@ -13,19 +13,20 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 """
 
-
+# pyright: reportUnknownMemberType=false, reportUnknownParameterType=false, reportMissingParameterType=false
 
 # Code by Mathieu BORDIER-AUPY
 
 from microbit import *
 import radio
-import time
 
 # Clear screen at startup
 display.clear()
 
+global radio_status
 radio_status = True
 buffer = ''
+
 
 def _switch_radio(status):
     if status == True:
@@ -38,23 +39,22 @@ def _switch_radio(status):
         radio_status = False
     sleep(500)
     display.clear()
-    
+
+
 _switch_radio(True)
 
-while True: 
+while True:
     # Turn on or off the radio module
     if button_a.was_pressed():
         radio_status = not radio_status
         _switch_radio(radio_status)
-     
+
     if radio_status:
         if button_b.was_pressed():
             radio.send_bytes(bin(5000))
-        
+
         pin_v = pin0.read_analog()
         if pin_v is not None:
             radio.send_bytes(bin(pin_v))
-            #sleep(500)
-            #print(pin_v.to_bytes(2, 'big'))
-     
-
+            # sleep(500)
+            # print(pin_v.to_bytes(2, 'big'))

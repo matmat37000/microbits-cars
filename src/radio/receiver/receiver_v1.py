@@ -13,12 +13,12 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 """
 
+# pyright: reportUnknownMemberType=false, reportUnknownParameterType=false, reportMissingParameterType=false, reportUnknownArgumentType=false
 
 # Code by Mathieu BORDIER-AUPY
 
 from microbit import *
 import radio
-import time
 
 # Clear screen at startup
 display.clear()
