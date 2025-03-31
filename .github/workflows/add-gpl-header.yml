@@ -1,0 +1,56 @@
+name: Add GPL-3.0 License Header to Python Files
+
+on: [push]
+
+jobs:
+  add-license:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Add GPL-3.0 License Header to Python Files
+        run: |
+          python - <<EOF
+          import os
+
+          LICENSE_HEADER = '''"""
+          This program is free software: you can redistribute it and/or modify
+          it under the terms of the GNU General Public License as published by
+          the Free Software Foundation, either version 3 of the License, or
+          (at your option) any later version.
+
+          This program is distributed in the hope that it will be useful,
+          but WITHOUT ANY WARRANTY; without even the implied warranty of
+          MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+          GNU General Public License for more details.
+
+          You should have received a copy of the GNU General Public License
+          along with this program. If not, see <https://www.gnu.org/licenses/>.
+          """\n'''
+
+          def add_license_to_file(filepath):
+              with open(filepath, "r+", encoding="utf-8") as file:
+                  content = file.read()
+                  if "GNU General Public License" not in content:
+                      file.seek(0, 0)
+                      file.write(LICENSE_HEADER + "\n" + content)
+                      print(f"✅ Added GPL-3.0 license to {filepath}")
+
+          def process_directory(directory):
+              for root, _, files in os.walk(directory):
+                  for file in files:
+                      if file.endswith(".py"):
+                          add_license_to_file(os.path.join(root, file))
+
+          process_directory(".")
+          EOF
+
+      - name: Commit Changes
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add .
+          git commit -m "Added GPL-3.0 License Headers to Python files" || echo "No changes to commit"
+          git push
+
