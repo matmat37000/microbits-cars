@@ -46,11 +46,12 @@ jobs:
           process_directory(".")
           EOF
 
-      - name: Commit Changes
+      - name: Commit and Push Changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config --global user.name "github-actions"
+          git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions@github.com"
           git add .
           git commit -m "Added GPL-3.0 License Headers to Python files" || echo "No changes to commit"
-          git push
-
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }}
