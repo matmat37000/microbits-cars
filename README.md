@@ -1,4 +1,4 @@
-# micrbits-cars
+# microbits-cars
 
 ## Description
 Projet de voiture télécommandée en utilisant des microbits
