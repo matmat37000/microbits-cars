@@ -66,7 +66,7 @@ def encode_data(data):
     """
     on_state = int(data[0]).to_bytes(1, "little")
     reverse_state = int(data[1]).to_bytes(1, "little")
-    direction = data[2].to_bytes(2, "little")
+    direction = data[2].to_bytes(2, "little", True)
     speed = data[3].to_bytes(1, "little")
 
     return b"".join([on_state, reverse_state, direction, speed])
