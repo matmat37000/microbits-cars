@@ -25,7 +25,7 @@ display.clear()
 
 global radio_status
 radio_status = True
-buffer = ''
+buffer = ""
 
 
 def _switch_radio(status):

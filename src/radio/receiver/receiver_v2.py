@@ -26,14 +26,32 @@ display.clear()
 
 # Convert a range to another range
 def convert_range(value, in_min=0, in_max=1024, out_min=0, out_max=9):
+    """
+    Convert a range to another range
+    Args:
+        value (int): Value to convert
+        in_min (int): Range 'in' minimum, default to 0
+        in_max (int): Range 'in' maximum, default to 1024
+        out_min (int): Range 'out' minimum, default to 0
+        out_max (int): Range 'out' maximum, default to 9
+    """
     return int((value - in_min) * (out_max - out_min) / (in_max - in_min))
 
 
-# Set the whole led panel to a light level
-def set_display_to(light_level):
-    for x in range(5):
-        for y in range(5):
-            display.set_pixel(x, y, light_level)
+def decode_data(data):
+    """
+    Decode data to list
+    Args:
+        data (bytes): Data to decode
+    Returns:
+        (list[bool, bool, int, int): Binary data Convert
+    """
+    on_state = bool(data[0])
+    reverse_state = bool(data[1])
+    direction = int.from_bytes(data[2:4], "little")
+    speed = data[4]
+
+    return [on_state, reverse_state, direction, speed]
 
 
 class Main:
@@ -41,9 +59,16 @@ class Main:
         self.radio_status = True
         self.paused = False
 
+        self.old_data = (None, None, 0, None)
+
         self._switch_radio(True)
 
     def _switch_radio(self, status):
+        """
+        Turn radio on / off
+        Args:
+            status (bool): Status to set the radio to
+        """
         if status == True:
             radio.on()
             display.show(Image.YES)
@@ -71,18 +96,32 @@ class Main:
             radio_status = not self.radio_status
             self._switch_radio(radio_status)
 
+        # Run only if the radio is on
         if self.radio_status:
             data = radio.receive_bytes()
 
             if data is not None:
-                data_int = int(data, 2)
+                # *** RUN ALL OF YOUR LOGIC HERE ***
+                data_decoded = decode_data(data)
 
-                if data_int == 5000:
-                    self.pause()
-                    # sleep(1000)
-                elif not self.paused:
-                    # display.show(str(data_int))
-                    set_display_to(convert_range(data_int))
+                if data_decoded is not None:
+                    display.set_pixel(0, 0, 9)
+
+                    print(
+                        "\rMOTOR: {:<10} | BACKWARD: {:<10} | DIRECTION: {:<10} | SPEED: {:<10}".format(
+                            data_decoded[0],
+                            data_decoded[1],
+                            data_decoded[2],
+                            data_decoded[3],
+                        ),
+                        end="",  # Only use 'end=""' to overwrite the previous line
+                    )
+
+                # *** IF YOU WANT TO ACCESS CURRENT DATA, USE data_decoded !!! ***
+                # *** YOUR CODE HERE ***
+
+            else:
+                display.set_pixel(0, 0, 1)
 
 
 main = Main()
