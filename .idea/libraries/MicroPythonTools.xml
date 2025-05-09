@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="MicroPythonTools" type="python">
+    <CLASSES>
+      <root url="file://$APPLICATION_PLUGINS_DIR$/micropython-tools-jetbrains/stubs/micropython-unix-stubs_1.24.1" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
